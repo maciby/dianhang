@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dianhang.oa.mapper.ProjectContractMapper">
+    
+    <resultMap type="ProjectContract" id="ProjectContractResult">
+        <id     property="contractId"        column="CONTRACT_ID"        />
+        <result property="contractCode"      column="CONTRACT_CODE"      />
+        <result property="useUnitName"       column="USE_UNIT_NAME"      />
+        <result property="useUnitLinkman"    column="USE_UNIT_LINKMAN"   />
+        <result property="useUnitLinktel"    column="USE_UNIT_LINKTEL"   />
+        <result property="applyDate"         column="APPLY_DATE"         />
+        <result property="projectAddress"    column="PROJECT_ADDRESS"    />
+        <result property="brandType"         column="BRAND_TYPE"         />
+        <result property="direct"            column="DIRECT"             />
+        <result property="applyAdjust"       column="APPLY_ADJUST"       />
+        <result property="stockUp"           column="STOCK_UP"           />
+        <result property="stockUpMemo"       column="STOCK_UP_MEMO"      />
+        <result property="agencyId"          column="AGENCY_ID"          />
+        <result property="agencyName"        column="AGENCY_NAME"        />
+        <result property="agencyLinkman"     column="AGENCY_LINKMAN"     />
+        <result property="agencyLinktel"     column="AGENCY_LINKTEL"     />
+        <result property="distributorId"     column="DISTRIBUTOR_ID"     />
+        <result property="distributorName"   column="DISTRIBUTOR_NAME"   />
+        <result property="distributorLinkman"     column="DISTRIBUTOR_LINKMAN"     />
+        <result property="distributorLinktel"     column="DISTRIBUTOR_LINKTEL"     />
+        <result property="projectType"       column="PROJECT_TYPE"       />
+        <result property="byoutType"         column="BYOUT_TYPE"         />
+        <result property="specialReq"        column="SPECIAL_REQ"        />
+        <result property="areaLinkid"        column="AREA_LINKID"       />
+        <result property="areaLinkman"       column="AREA_LINKMAN"       />
+        <result property="areaLinktel"       column="AREA_LINKTEL"       />
+        <result property="commonNo"          column="COMMON_NO"          />
+        <result property="remark"            column="REMARK"             />
+        <result property="status"            column="STATUS"             />
+        <result property="createUserId"      column="CREATE_USER_ID"     />
+        <result property="createBy"          column="CREATE_BY"          />
+        <result property="createTime"        column="CREATE_TIME"        />
+    </resultMap>
+    
+   	<sql id="selectProjectContractVo">
+        select CONTRACT_ID, CONTRACT_CODE, USE_UNIT_NAME, USE_UNIT_LINKMAN, USE_UNIT_LINKTEL
+        , APPLY_DATE, PROJECT_ADDRESS, BRAND_TYPE, DIRECT, APPLY_ADJUST
+        , STOCK_UP, STOCK_UP_MEMO, AGENCY_ID, AGENCY_NAME, AGENCY_LINKMAN
+        , AGENCY_LINKTEL, DISTRIBUTOR_ID, DISTRIBUTOR_NAME, DISTRIBUTOR_LINKMAN, DISTRIBUTOR_LINKTEL
+        , PROJECT_TYPE, BYOUT_TYPE, SPECIAL_REQ, AREA_LINKID, AREA_LINKMAN
+        , AREA_LINKTEL, COMMON_NO, REMARK, STATUS, CREATE_USER_ID
+        , CREATE_BY , CREATE_TIME 
+        from GZ_PROJECT_CONTRACT
+    </sql>
+	
+    <select id="selectProjectContractList" parameterType="ProjectContract" resultMap="ProjectContractResult">
+        <include refid="selectProjectContractVo"/>
+        <where>  
+            <if test="contractId != null  and contractId != '' "> and CONTRACT_ID = #{contractId}</if>
+             <if test="contractCode != null  and contractCode != '' "> and CONTRACT_CODE = #{contractCode}</if>
+             <if test="useUnitName != null  and useUnitName != '' "> and USE_UNIT_NAME = #{useUnitName}</if>
+             <if test="useUnitLinkman != null  and useUnitLinkman != '' "> and USE_UNIT_LINKMAN = #{useUnitLinkman}</if>
+             <if test="useUnitLinktel != null  and useUnitLinktel != '' "> and USE_UNIT_LINKTEL = #{useUnitLinktel}</if>
+             <if test="applyDate != null "> and APPLY_DATE = #{applyDate}</if>
+             <if test="projectAddress != null  and projectAddress != '' "> and PROJECT_ADDRESS = #{projectAddress}</if>
+             <if test="brandType != null  and brandType != '' "> and BRAND_TYPE = #{brandType}</if>
+             <if test="direct != null  and direct != '' "> and DIRECT = #{direct}</if>
+             <if test="applyAdjust != null  and applyAdjust != '' "> and APPLY_ADJUST = #{applyAdjust}</if>
+             <if test="stockUp != null  and stockUp != '' "> and STOCK_UP = #{stockUp}</if>
+             <if test="stockUpMemo != null  and stockUpMemo != '' "> and STOCK_UP_MEMO = #{stockUpMemo}</if>
+             <if test="agencyId != null  and agencyId != '' "> and AGENCY_ID = #{agencyId}</if>
+             <if test="agencyName != null  and agencyName != '' "> and AGENCY_NAME = #{agencyName}</if>
+             <if test="agencyLinkman != null  and agencyLinkman != '' "> and AGENCY_LINKMAN = #{agencyLinkman}</if>
+             <if test="agencyLinktel != null  and agencyLinktel != '' "> and AGENCY_LINKTEL = #{agencyLinktel}</if>
+             <if test="distributorId != null  and distributorId != '' "> and DISTRIBUTOR_ID = #{distributorId}</if>
+             <if test="distributorName != null  and distributorName != '' "> and DISTRIBUTOR_NAME = #{distributorName}</if>
+             <if test="projectType != null  and projectType != '' "> and PROJECT_TYPE = #{projectType}</if>
+             <if test="byoutType != null  and byoutType != '' "> and BYOUT_TYPE = #{byoutType}</if>
+             <if test="specialReq != null  and specialReq != '' "> and SPECIAL_REQ = #{specialReq}</if>
+             <if test="areaLinkman != null  and areaLinkman != '' "> and AREA_LINKMAN = #{areaLinkman}</if>
+             <if test="areaLinktel != null  and areaLinktel != '' "> and AREA_LINKTEL = #{areaLinktel}</if>
+             <if test="commonNo != null  and commonNo != '' "> and COMMON_NO = #{commonNo}</if>
+             <if test="remark != null  and remark != '' "> and REMARK = #{remark}</if>
+             <if test="status != null  and status != '' "> and STATUS = #{status}</if>
+             <if test="createUserId != null  and createUserId != '' "> and CREATE_USER_ID = #{createUserId}</if>
+             <if test="createBy != null  and createBy != '' "> and CREATE_BY = #{createBy}</if>
+             <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectProjectContractById" parameterType="String" resultMap="ProjectContractResult">
+        <include refid="selectProjectContractVo"/>
+        where CONTRACT_ID = #{contractId}
+    </select>
+    
+	<select id="selectProjectContractCount" parameterType="ProjectContract" resultType="int">
+		select count(1) from GZ_PROJECT_CONTRACT
+		where 1=1
+		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+			and convert(varchar(10), create_time, 120) &gt;= convert(varchar(10), #{params.beginTime}, 120)
+		</if>
+	</select>
+    
+    <insert id="insertProjectContract" parameterType="ProjectContract">
+ 		<selectKey keyProperty="contractId" resultType="String" order="BEFORE">
+            select replace(newId(),'-','')
+        </selectKey>
+        insert into GZ_PROJECT_CONTRACT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="contractId != null  and contractId != ''  ">CONTRACT_ID,</if>
+			<if test="contractCode != null  and contractCode != ''  ">CONTRACT_CODE,</if>
+			<if test="useUnitName != null  and useUnitName != ''  ">USE_UNIT_NAME,</if>
+			<if test="useUnitLinkman != null  and useUnitLinkman != ''  ">USE_UNIT_LINKMAN,</if>
+			<if test="useUnitLinktel != null  and useUnitLinktel != ''  ">USE_UNIT_LINKTEL,</if>
+			<if test="applyDate != null  ">APPLY_DATE,</if>
+			<if test="projectAddress != null  and projectAddress != ''  ">PROJECT_ADDRESS,</if>
+			<if test="brandType != null  and brandType != ''  ">BRAND_TYPE,</if>
+			<if test="direct != null  and direct != ''  ">DIRECT,</if>
+			<if test="applyAdjust != null  and applyAdjust != ''  ">APPLY_ADJUST,</if>
+			<if test="stockUp != null  and stockUp != ''  ">STOCK_UP,</if>
+			<if test="stockUpMemo != null  and stockUpMemo != ''  ">STOCK_UP_MEMO,</if>
+			<if test="agencyId != null  and agencyId != ''  ">AGENCY_ID,</if>
+			<if test="agencyName != null  and agencyName != ''  ">AGENCY_NAME,</if>
+			<if test="agencyLinkman != null  and agencyLinkman != ''  ">AGENCY_LINKMAN,</if>
+			<if test="agencyLinktel != null  and agencyLinktel != ''  ">AGENCY_LINKTEL,</if>
+			<if test="distributorId != null  and distributorId != ''  ">DISTRIBUTOR_ID,</if>
+			<if test="distributorName != null  and distributorName != ''  ">DISTRIBUTOR_NAME,</if>
+			<if test="distributorLinkman != null  and distributorLinkman != ''  ">DISTRIBUTOR_LINKMAN,</if>
+			<if test="distributorLinktel != null  and distributorLinktel != ''  ">DISTRIBUTOR_LINKTEL,</if>
+			<if test="projectType != null  and projectType != ''  ">PROJECT_TYPE,</if>
+			<if test="byoutType != null  and byoutType != ''  ">BYOUT_TYPE,</if>
+			<if test="specialReq != null  and specialReq != ''  ">SPECIAL_REQ,</if>
+			<if test="areaLinkid != null  and areaLinkid != ''  ">AREA_LINKID,</if>
+			<if test="areaLinkman != null  and areaLinkman != ''  ">AREA_LINKMAN,</if>
+			<if test="areaLinktel != null  and areaLinktel != ''  ">AREA_LINKTEL,</if>
+			<if test="commonNo != null  and commonNo != ''  ">COMMON_NO,</if>
+			<if test="remark != null  and remark != ''  ">REMARK,</if>
+			<if test="status != null  and status != ''  ">STATUS,</if>
+			<if test="createUserId != null  and createUserId != ''  ">CREATE_USER_ID,</if>
+			<if test="createBy != null  and createBy != ''  ">CREATE_BY,</if>
+			CREATE_TIME
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="contractId != null  and contractId != ''  ">#{contractId},</if>
+			<if test="contractCode != null  and contractCode != ''  ">#{contractCode},</if>
+			<if test="useUnitName != null  and useUnitName != ''  ">#{useUnitName},</if>
+			<if test="useUnitLinkman != null  and useUnitLinkman != ''  ">#{useUnitLinkman},</if>
+			<if test="useUnitLinktel != null  and useUnitLinktel != ''  ">#{useUnitLinktel},</if>
+			<if test="applyDate != null  ">#{applyDate},</if>
+			<if test="projectAddress != null  and projectAddress != ''  ">#{projectAddress},</if>
+			<if test="brandType != null  and brandType != ''  ">#{brandType},</if>
+			<if test="direct != null  and direct != ''  ">#{direct},</if>
+			<if test="applyAdjust != null  and applyAdjust != ''  ">#{applyAdjust},</if>
+			<if test="stockUp != null  and stockUp != ''  ">#{stockUp},</if>
+			<if test="stockUpMemo != null  and stockUpMemo != ''  ">#{stockUpMemo},</if>
+			<if test="agencyId != null  and agencyId != ''  ">#{agencyId},</if>
+			<if test="agencyName != null  and agencyName != ''  ">#{agencyName},</if>
+			<if test="agencyLinkman != null  and agencyLinkman != ''  ">#{agencyLinkman},</if>
+			<if test="agencyLinktel != null  and agencyLinktel != ''  ">#{agencyLinktel},</if>
+			<if test="distributorId != null  and distributorId != ''  ">#{distributorId},</if>
+			<if test="distributorName != null  and distributorName != ''  ">#{distributorName},</if>
+			<if test="distributorLinkman != null  and distributorLinkman != ''  ">#{distributorLinkman},</if>
+			<if test="distributorLinktel != null  and distributorLinktel != ''  ">#{distributorLinktel},</if>
+			<if test="projectType != null  and projectType != ''  ">#{projectType},</if>
+			<if test="byoutType != null  and byoutType != ''  ">#{byoutType},</if>
+			<if test="specialReq != null  and specialReq != ''  ">#{specialReq},</if>
+			<if test="areaLinkid != null  and areaLinkid != ''  ">#{areaLinkid},</if>
+			<if test="areaLinkman != null  and areaLinkman != ''  ">#{areaLinkman},</if>
+			<if test="areaLinktel != null  and areaLinktel != ''  ">#{areaLinktel},</if>
+			<if test="commonNo != null  and commonNo != ''  ">#{commonNo},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="status != null  and status != ''  ">#{status},</if>
+			<if test="createUserId != null  and createUserId != ''  ">#{createUserId},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateProjectContract" parameterType="ProjectContract">
+        update GZ_PROJECT_CONTRACT
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractCode != null  and contractCode != ''  ">CONTRACT_CODE = #{contractCode},</if>
+            <if test="useUnitName != null  and useUnitName != ''  ">USE_UNIT_NAME = #{useUnitName},</if>
+            <if test="useUnitLinkman != null  and useUnitLinkman != ''  ">USE_UNIT_LINKMAN = #{useUnitLinkman},</if>
+            <if test="useUnitLinktel != null  and useUnitLinktel != ''  ">USE_UNIT_LINKTEL = #{useUnitLinktel},</if>
+            <if test="applyDate != null  ">APPLY_DATE = #{applyDate},</if>
+            <if test="projectAddress != null  and projectAddress != ''  ">PROJECT_ADDRESS = #{projectAddress},</if>
+            <if test="brandType != null  and brandType != ''  ">BRAND_TYPE = #{brandType},</if>
+            <if test="direct != null  and direct != ''  ">DIRECT = #{direct},</if>
+            <if test="applyAdjust != null  and applyAdjust != ''  ">APPLY_ADJUST = #{applyAdjust},</if>
+            <if test="stockUp != null  and stockUp != ''  ">STOCK_UP = #{stockUp},</if>
+            <if test="stockUpMemo != null  and stockUpMemo != ''  ">STOCK_UP_MEMO = #{stockUpMemo},</if>
+            <if test="agencyId != null  and agencyId != ''  ">AGENCY_ID = #{agencyId},</if>
+            <if test="agencyName != null  and agencyName != ''  ">AGENCY_NAME = #{agencyName},</if>
+            <if test="agencyLinkman != null  and agencyLinkman != ''  ">AGENCY_LINKMAN = #{agencyLinkman},</if>
+            <if test="agencyLinktel != null  and agencyLinktel != ''  ">AGENCY_LINKTEL = #{agencyLinktel},</if>
+            <if test="distributorId != null  and distributorId != ''  ">DISTRIBUTOR_ID = #{distributorId},</if>
+            <if test="distributorName != null  and distributorName != ''  ">DISTRIBUTOR_NAME = #{distributorName},</if>
+			<if test="distributorLinkman != null  and distributorLinkman != ''  ">DISTRIBUTOR_LINKMAN=#{distributorLinkman},</if>
+			<if test="distributorLinktel != null  and distributorLinktel != ''  ">DISTRIBUTOR_LINKTEL=#{distributorLinktel},</if>
+            <if test="projectType != null  and projectType != ''  ">PROJECT_TYPE = #{projectType},</if>
+            <if test="byoutType != null  and byoutType != ''  ">BYOUT_TYPE = #{byoutType},</if>
+            <if test="specialReq != null  and specialReq != ''  ">SPECIAL_REQ = #{specialReq},</if>
+			<if test="areaLinkid != null  and areaLinkid != ''  ">AREA_LINKID=#{areaLinkid},</if>
+            <if test="areaLinkman != null  and areaLinkman != ''  ">AREA_LINKMAN = #{areaLinkman},</if>
+            <if test="areaLinktel != null  and areaLinktel != ''  ">AREA_LINKTEL = #{areaLinktel},</if>
+            <if test="commonNo != null  and commonNo != ''  ">COMMON_NO = #{commonNo},</if>
+            <if test="remark != null  and remark != ''  ">REMARK = #{remark},</if>
+            <if test="status != null  and status != ''  ">STATUS = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null  ">CREATE_TIME = #{createTime},</if>
+        </trim>
+        where CONTRACT_ID = #{contractId}
+    </update>
+
+	<delete id="deleteProjectContractById" parameterType="String">
+        delete from GZ_PROJECT_CONTRACT where CONTRACT_ID = #{contractId}
+    </delete>
+	
+    <delete id="deleteProjectContractByIds" parameterType="String">
+        delete from GZ_PROJECT_CONTRACT where CONTRACT_ID in 
+        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+            #{contractId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+
+	<div class="container-div">
+		<div class="row">
+			<div th:include="oa/contract/contract :: divProjectContract" />
+			
+			<div th:include="oa/contract/contract :: divContractProduct" />
+			
+			<div th:include="oa/contract/contract :: divContractFile" />
+			
+			<div th:include="oa/contract/contract :: divFlowProcess" />
+		
+			
+		</div>
+	</div>
+
+	<div th:include="include::footer"></div>
+</body>
+</html>

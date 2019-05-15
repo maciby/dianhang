@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dianhang.oa.mapper.CustomerMapper">
+
+	<resultMap type="Customer" id="CustomerResult">
+		<id      property="customerId"     column="customer_id"    />
+		<result  property="customerName"   column="customer_name"  />
+		<result  property="customerCode"   column="customer_code"  />
+		<result  property="parentName"     column="parent_name"    />
+		<result  property="parentId"       column="parent_id"      />
+		<result  property="linkman"        column="linkman"        />
+		<result  property="linktel"        column="linktel"        />
+		<result  property="address"        column="address"        />
+        <result  property="createTime"     column="CREATE_TIME"    />
+	</resultMap>
+	
+	<sql id="selectCustomerVo">
+        SELECT CUSTOMER_ID, CUSTOMER_NAME, PARENT_ID,CUSTOMER_CODE, LINKMAN, LINKTEL, ADDRESS, CREATE_TIME
+		FROM GZ_CUSTOMER
+    </sql>
+    
+	
+	<select id="selectCustomerAll" resultMap="CustomerResult">
+		<include refid="selectCustomerVo"/>
+		ORDER BY CUSTOMER_ID
+	</select>
+	
+	
+	
+    <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        <where>  
+        	<if test="customerName != null  and customerName != '' "> and CUSTOMER_NAME = #{customerName}</if>
+            <if test="parentId != null  and parentId != '' "> and parent_id like #{parentId}+'%'</if>
+            <if test="linktel != null  and linktel != '' "> and LINKTEL = #{linktel}</if>
+            <if test="linktel != null  and linktel != '' "> and LINKTEL = #{linktel}</if>
+        </where>
+    </select>
+	
+	<select id="selectCustomerById" parameterType="String" resultMap="CustomerResult">
+		<include refid="selectCustomerVo"/>
+		WHERE CUSTOMER_ID = #{customerId}
+	</select>
+	
+ 	
+	
+</mapper> 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+	<div th:include="include::footer"></div>
+
+	<form id="form-post-add">
+	<div class="container-div">
+		<div class="row">
+			<div th:if="${currentActivity} == '1'"  th:include="oa/contract/contract :: divProjectContractEdit"></div>
+			<div th:if="${currentActivity} != '1'" th:include="oa/contract/contract :: divProjectContract" />
+			
+			<div th:if="${currentActivity} == '1'" th:include="oa/contract/contract :: divContractProductEdit" />
+			<div th:if="${currentActivity} != '1'" th:include="oa/contract/contract :: divContractProduct" />
+			
+			<div th:if="${currentActivity} == '1'" th:include="oa/contract/contract :: divContractFileEdit" />
+			<div th:if="${currentActivity} != '1'" th:include="oa/contract/contract :: divContractFile" />
+			
+			<div th:include="oa/contract/contract :: divFlowProcess" />
+		
+		
+			<div th:if="${currentActivity} == '1'" class="col-sm-12 search-collapse form-group">
+				<input class="form-control" type="hidden" name="flowProcess.userId" />
+				<input class="form-control" type="hidden" name="flowProcess.userName" />
+				<input class="form-control" type="hidden" name="flowProcess.activity" value="2" />
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><br/>处理意见：</label>
+					<div class="col-sm-9"><br/>
+						<textarea class="form-control" id="flowProcessOpinion" name="flowProcess.opinion"></textarea>
+					</div>
+				</div>
+			</div>
+			
+			<div th:if="${currentActivity} != '1'" class="col-sm-12 search-collapse form-group">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">处理结果：</label>
+					<div class="col-sm-9" id="flowProcessActivity">
+<!-- 						<label class="radio-box"> <input type="radio" name="flowProcess.status" value="1" th:checked="true"/> 提交 </label>  -->
+<!-- 						<label class="radio-box"> <input type="radio" name="flowProcess.status" value="2" /> 退回 </label>  -->
+					</div>
+				</div>
+				<div class="form-group" style="display:none;" id="divUser">
+					<label class="col-sm-2 control-label"><br/>审核人：</label>
+					<div class="col-sm-9"><br/>
+						<select class="form-control" name="flowProcess.userId" id="flowProcessUserId" onchange="setFlowProcessUserName(this)">
+							<option value=""></option>
+						</select>
+						
+						<input class="form-control" type="hidden" name="flowProcess.userName" />
+						<input class="form-control" type="hidden" name="flowProcess.activity" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><br/>处理意见：</label>
+					<div class="col-sm-9"><br/>
+						<textarea class="form-control" id="flowProcessOpinion" name="flowProcess.opinion"></textarea>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+	</form>
+	<div th:if="${currentActivity} == '1'" th:include="oa/contract/contract :: divContractProductTemplate" />
+	
+	<script th:inline="javascript">
+		var prefix = ctx + "oa/contract";
+		function submitHandler(){
+	        if ($.validate.form()) {
+	        	
+	        	// 选择提交，必须选择人
+	        	var _activityObj = $('input[name="flowProcess_result"]:checked');
+	        	var _activit = _activityObj.val();
+	        	if($('#divUser').is(':visible')){//如果选择审核人可见，则必填
+	        		if($('#flowProcessUserId').val() == ""){
+	        			$.modal.msg('请选择审核人！');
+	        			return;
+	        		}
+	        	}
+	        	
+	        	if(_activit == '2'){
+	        		$('#flowProcessUserId').val('');
+	        		if($('#flowProcessOpinion').val() == ""){
+	        			$.modal.msg('请填写处理意见！');
+	        			return;
+	        		}
+	        	}
+				
+	        	$('#form-post-add').attr('action', prefix + "/deal");
+	        	$('#form-post-add').attr('method', 'post');
+	        	$.operate.ajaxSubmit($('#form-post-add'),function(responseText){
+	        		console.log(responseText);
+	        		$.modal.notice(responseText.msg, function(){
+	        			if (responseText.code == web_status.SUCCESS) {
+	                        $.modal.close();
+	                        window.parent.$.modal.msgSuccess(responseText.msg);
+	                        window.parent.$.table.refresh();
+	        			}
+	        		});
+	        	});
+	        	
+	        }
+		}
+
+	    
+		$("#form-post-add").validate({
+			rules:{
+				"flowProcess_result":{
+					required: true
+				}
+			},
+			messages: {
+		        "flowProcess_result": {
+		        	required: "请选择处理结果！"
+		        },
+		        "projectContract.applyDate": {
+		            remote: "申请日期不能为空！"
+		        },
+		        "postName": {
+		            remote: "岗位名称已经存在"
+		        }
+		    }
+		});
+		
+		$(function(){
+			
+			
+// 			var curActivity = $('#flowActivty').html();
+// 			console.log(curActivity);
+
+// 			console.log([[${currentActivity}]]);
+// 			var datas = [[${@oaCommon.getFlowActivityRole('contract_contract_type')}]];
+// 			console.log(getApproveUserList());
+// 			console.log(getApproveOpinionList());
+// 			var str = '[{"id":"1","name":"提交","toId":"3"},{"id":"2","name":"退回","toId":"1"}]';
+
+
+			$.each($.parseJSON(getApproveOpinionList()), function(index,data){
+				var _html = '<label class="radio-box"> <input type="radio" name="flowProcess_result" onclick="setActivity(this)" value="'+data.id+'" toId="'+data.toId+'" /> '+data.name+' </label>';
+				$('#flowProcessActivity').append(_html);
+			});
+			
+			$.each(getApproveUserList(), function(index,data){
+				var _html = '<option  value="'+data.userId+'"> '+data.userName+' </option>';
+				$('#flowProcessUserId').append(_html);
+			});
+			
+		});
+		
+		function setActivity(obj){
+			var val = $(obj).val();
+			if(val == '1' && $(obj).attr('toId') != '999'){
+				$('#divUser').show();
+			}else{
+				$('#divUser').hide();
+			}
+			$('[name="flowProcess.activity"]').val($(obj).attr("toId"));
+		}
+		
+		function setFlowProcessUserName(obj){
+			$('[name="flowProcess.userName"]').val($(obj).find("option:selected").text());
+		}
+		
+		function setFlowProcessUser(userId,userName){
+			$('[name="flowProcess.userId"]').val(userId);
+			$('[name="flowProcess.userName"]').val(userName);
+		}
+	</script>
+
+</body>
+</html>

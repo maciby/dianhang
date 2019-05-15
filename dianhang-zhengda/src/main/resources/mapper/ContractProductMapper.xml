@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dianhang.oa.mapper.ContractProductMapper">
+    
+    <resultMap type="ContractProduct" id="ContractProductResult">
+        <result property="id"                  column="ID"    />
+        <result property="contractId"          column="CONTRACT_ID"    />
+        <result property="productId"           column="PRODUCT_ID"    />
+        <result property="productName"         column="PRODUCT_NAME"    />
+        <result property="applyQuantity"       column="APPLY_QUANTITY"    />
+        <result property="contractPrice"       column="CONTRACT_PRICE"    />
+        <result property="agencyApplyPrice"    column="AGENCY_APPLY_PRICE"    />
+        <result property="agencyApprovePrice"  column="AGENCY_APPROVE_PRICE"    />
+        <result property="distributorPrice"    column="DISTRIBUTOR_PRICE"    />
+        <result property="balanceType"         column="BALANCE_TYPE"    />
+    </resultMap>
+    
+	<sql id="selectContractProductVo">
+        select ID, CONTRACT_ID, PRODUCT_ID, PRODUCT_NAME, APPLY_QUANTITY, CONTRACT_PRICE, AGENCY_APPLY_PRICE, AGENCY_APPROVE_PRICE, DISTRIBUTOR_PRICE, BALANCE_TYPE from GZ_CONTRACT_PRODUCT
+    </sql>
+	
+    <select id="selectContractProductList" parameterType="ContractProduct" resultMap="ContractProductResult">
+        <include refid="selectContractProductVo"/>
+        <where>  
+            <if test="id != null  and id != '' "> and ID = #{id}</if>
+             <if test="contractId != null  and contractId != '' "> and CONTRACT_ID = #{contractId}</if>
+             <if test="productId != null  and productId != '' "> and PRODUCT_ID = #{productId}</if>
+             <if test="productName != null  and productName != '' "> and PRODUCT_NAME = #{productName}</if>
+             <if test="applyQuantity != null "> and APPLY_QUANTITY = #{applyQuantity}</if>
+             <if test="contractPrice != null "> and CONTRACT_PRICE = #{contractPrice}</if>
+             <if test="agencyApplyPrice != null "> and AGENCY_APPLY_PRICE = #{agencyApplyPrice}</if>
+             <if test="agencyApprovePrice != null "> and AGENCY_APPROVE_PRICE = #{agencyApprovePrice}</if>
+             <if test="distributorPrice != null "> and DISTRIBUTOR_PRICE = #{distributorPrice}</if>
+             <if test="balanceType != null "> and BALANCE_TYPE = #{balanceType}</if>
+         </where>
+    </select>
+    
+    <select id="selectContractProductById" parameterType="String" resultMap="ContractProductResult">
+        <include refid="selectContractProductVo"/>
+        where ID = #{id}
+    </select>
+    
+    <select id="selectContractProductByContractId" parameterType="String" resultMap="ContractProductResult">
+        <include refid="selectContractProductVo"/>
+        where CONTRACT_ID = #{contractId}
+    </select>
+            
+    <insert id="insertContractProduct" parameterType="ContractProduct">
+        insert into GZ_CONTRACT_PRODUCT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">ID,</if>
+			<if test="contractId != null  and contractId != ''  ">CONTRACT_ID,</if>
+			<if test="productId != null  and productId != ''  ">PRODUCT_ID,</if>
+			<if test="productName != null  and productName != ''  ">PRODUCT_NAME,</if>
+			<if test="applyQuantity != null  ">APPLY_QUANTITY,</if>
+			<if test="contractPrice != null  ">CONTRACT_PRICE,</if>
+			<if test="agencyApplyPrice != null  ">AGENCY_APPLY_PRICE,</if>
+			<if test="agencyApprovePrice != null  ">AGENCY_APPROVE_PRICE,</if>
+			<if test="distributorPrice != null  ">DISTRIBUTOR_PRICE,</if>
+			<if test="balanceType != null  ">BALANCE_TYPE,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">#{id},</if>
+			<if test="contractId != null  and contractId != ''  ">#{contractId},</if>
+			<if test="productId != null  and productId != ''  ">#{productId},</if>
+			<if test="productName != null  and productName != ''  ">#{productName},</if>
+			<if test="applyQuantity != null  ">#{applyQuantity},</if>
+			<if test="contractPrice != null  ">#{contractPrice},</if>
+			<if test="agencyApplyPrice != null  ">#{agencyApplyPrice},</if>
+			<if test="agencyApprovePrice != null  ">#{agencyApprovePrice},</if>
+			<if test="distributorPrice != null  ">#{distributorPrice},</if>
+			<if test="balanceType != null  ">#{balanceType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateContractProduct" parameterType="ContractProduct">
+        update GZ_CONTRACT_PRODUCT
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractId != null  and contractId != ''  ">CONTRACT_ID = #{contractId},</if>
+            <if test="productId != null  and productId != ''  ">PRODUCT_ID = #{productId},</if>
+            <if test="productName != null  and productName != ''  ">PRODUCT_NAME = #{productName},</if>
+            <if test="applyQuantity != null  ">APPLY_QUANTITY = #{applyQuantity},</if>
+            <if test="contractPrice != null  ">CONTRACT_PRICE = #{contractPrice},</if>
+            <if test="agencyApplyPrice != null  ">AGENCY_APPLY_PRICE = #{agencyApplyPrice},</if>
+            <if test="agencyApprovePrice != null  ">AGENCY_APPROVE_PRICE = #{agencyApprovePrice},</if>
+            <if test="distributorPrice != null  ">DISTRIBUTOR_PRICE = #{distributorPrice},</if>
+            <if test="balanceType != null  ">BALANCE_TYPE = #{balanceType},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+	<delete id="deleteContractProductById" parameterType="String">
+        delete from GZ_CONTRACT_PRODUCT where ID = #{id}
+    </delete>
+	
+    <delete id="deleteContractProductByIds" parameterType="String">
+        delete from GZ_CONTRACT_PRODUCT where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteContractProductByContractId" parameterType="String">
+        delete from GZ_CONTRACT_PRODUCT where CONTRACT_ID = #{contractId}
+    </delete>
+    
+	<insert id="batchContractProduct" parameterType="list">
+		insert into GZ_CONTRACT_PRODUCT(ID, CONTRACT_ID, PRODUCT_ID, PRODUCT_NAME, APPLY_QUANTITY
+		, CONTRACT_PRICE, AGENCY_APPLY_PRICE, AGENCY_APPROVE_PRICE, DISTRIBUTOR_PRICE, BALANCE_TYPE) values
+		<foreach item="item" index="index" collection="list" separator=",">
+			(replace(newId(),'-',''), #{item.contractId}, #{item.productId}, #{item.productName}, #{item.applyQuantity}
+			, #{item.contractPrice}, #{item.agencyApplyPrice}, #{item.agencyApprovePrice}, #{item.distributorPrice}, #{item.balanceType})
+		</foreach>
+	</insert>
+    
+    
+</mapper>

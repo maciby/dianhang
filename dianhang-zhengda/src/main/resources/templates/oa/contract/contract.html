@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+
+		<div th:fragment="divProjectContractEdit" >
+				<div class="col-sm-12 search-collapse">
+					<table class="table">
+						<tr>
+							<th>项目登录号：</th>
+							<td>
+								<input type="hidden" name="projectContract.contractId" th:value="${contract.contractId}" />
+								<input class="form-control" type="text" value="自动生成" readonly="readonly" th:value="${contract.contractCode}"/>
+							</td>
+							<th><span>*</span> 使用单位：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.useUnitName" th:value="${contract.useUnitName}"/>
+							</td>
+							<th><span>*</span> 申报日期：</th>
+							<td>
+								<input class="form-control time-input" type="text" name="projectContract.applyDate" th:value="${#dates.format(contract.applyDate, 'yyyy-MM-dd')}" />
+							</td>
+						</tr>
+						<tr>
+							<th><span>*</span> 联系人：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.useUnitLinkman" th:value="${contract.useUnitLinkman}" />
+							</td>
+							<th><span>*</span> 联系电话：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.useUnitLinktel" th:value="${contract.useUnitLinktel}" />
+							</td>
+							<th><span>*</span> 项目详细地址：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.projectAddress" th:value="${contract.projectAddress}" />
+							</td>
+						</tr>
+						<tr>
+							<th><span>*</span> 品类：</th>
+							<td>
+								<select class="form-control" name="projectContract.brandType" th:with="type=${@dict.getType('contract_brand_type')}">
+									<option value=""></option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.dictValue == contract.brandType}"></option>
+								</select>
+							</td>
+							<th>是否总部直发：</th>
+							<td>
+								<select class="form-control" name="projectContract.direct" th:with="type=${@dict.getType('common_yes_no')}">
+									<option value=""></option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.dictValue == contract.direct}"></option>
+								</select>
+							</td>
+							<th>是否申报调整：</th>
+							<td>
+								<select class="form-control" name="projectContract.applyAdjust" th:with="type=${@dict.getType('common_yes_no')}">
+									<option value=""></option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.dictValue == contract.applyAdjust}"></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th>是否备货工程：</th>
+							<td>
+								<select class="form-control" name="projectContract.stockUp" th:with="type=${@dict.getType('common_yes_no')}">
+									<option value=""></option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.dictValue == contract.stockUp}"></option>
+								</select>
+							</td>
+							<th>备货工程申报单：</th>
+							<td colspan="3">
+								<input class="form-control" type="text" name="projectContract.stockUpMemo" th:value="${contract.stockUpMemo}" />
+							</td>
+						</tr>
+						<tr>
+							<th><span>*</span> 代理商：</th>
+							<td>
+							
+								<select class="form-control" name="projectContract.agencyId" onchange="agencyChange(this)" th:with="type=${@oaCommon.getSingleMap('GZ_BRANCH','BRANCH_ID','BRANCH_NAME')}">
+									<option value=""></option>
+									<option th:each="dict : ${type}" th:text="${dict.value}" th:value="${dict.key}" th:selected="${dict.key == contract.agencyId}"></option>
+								</select>
+								
+								<input class="form-control" type="hidden" name="projectContract.agencyName" th:value="${contract.agencyName}" />
+							</td>
+							<th>分销商：</th>
+							<td colspan="3">
+								<input class="form-control" type="hidden" name="projectContract.distributorId" th:value="${contract.distributorId}" />
+								<input class="form-control" type="text" name="projectContract.distributorName" th:value="${contract.distributorName}" onclick="selectCustomer('selectDistributor')" />
+							</td>
+						</tr>
+						<tr>
+							<th><span>*</span> 项目类型：</th>
+							<td>
+								<select class="form-control" name="projectContract.projectType" th:with="type=${@dict.getType('contract_project_type')}">
+									<option value=""></option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.dictValue == contract.projectType}"></option>
+								</select>
+							</td>
+							<th><span>*</span> 买断类型：</th>
+							<td>
+								<select class="form-control" name="projectContract.byoutType" th:with="type=${@dict.getType('contract_byout_type')}">
+									<option value=""></option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.dictValue == contract.byoutType}"></option>
+								</select>
+							</td>
+							<th><span>*</span> 联系人：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.distributorLinkman" th:value="${contract.distributorLinkman}" />
+							</td>
+						</tr>
+						<tr>
+							<th><span>*</span> 联系电话：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.distributorLinktel" th:value="${contract.distributorLinktel}" />
+							</td>
+							<th>特殊技术要求：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.specialReq" th:value="${contract.specialReq}" />
+							</td>
+							<th><span>*</span> 区域经理：</th>
+							<td>
+								<select class="form-control" name="projectContract.areaLinkid" onchange="setAreaManager(this)">
+									<option value=""></option>
+									<option th:each="dict : ${areaManagerList}" th:text="${dict.userName}" th:value="${dict.userId}" th:title="${dict.phonenumber}" th:selected="${dict.userId == contract.areaLinkid}" ></option>
+								</select>
+								<input class="form-control" type="hidden" name="projectContract.areaLinkman" onclick="selectUserByRole('area_manager')" />
+							</td>
+						</tr>
+						<tr>
+							<th><span>*</span> 区域经理电话：</th>
+							<td>
+								<input class="form-control" type="text" name="projectContract.areaLinktel" th:value="${contract.areaLinktel}" />
+							</td>
+							<th>CIMS申报号：</th>
+							<td colspan="3">
+								<input class="form-control" type="text" name="projectContract.commonNo" th:value="${contract.commonNo}"  />
+							</td>
+						</tr>
+					</table>
+				</div>
+				<script type="text/javascript">
+				
+				function agencyChange(){
+					// 清空分销商数据
+		   			$('[name="projectContract.distributorId"]').val('');
+		   			$('[name="projectContract.distributorName"]').val('');
+		   			$('[name="projectContract.distributorLinkman"]').val('');
+		   			$('[name="projectContract.distributorLinktel"]').val('');
+				}
+				
+				function selectCustomer(callback){	
+					
+					// 查看代理商是否选择
+					var agencyId = $('[name="projectContract.agencyId"]').val();
+					if("" == agencyId){
+						$('[name="projectContract.agencyId"]').focus();
+						$.modal.msg('请选择代理商！');
+						return;
+					}
+		    		var url = ctx + "oa/customer/selectCustomerTree?parentId="+agencyId;
+		    		var options = {
+		   				title: '分销商选择',
+		   				width: "480",
+		   				url: url,
+		   				callBack: eval(callback)
+		   			};
+		   			$.modal.openOptions(options);
+				}
+				
+				function selectDistributor(index, layero){
+					var body = layer.getChildFrame('body', index);
+		   			$('[name="projectContract.distributorId"]').val(body.find('#treeId').val());
+		   			$('[name="projectContract.distributorName"]').val(body.find('#treeName').val());
+		   			$('[name="projectContract.distributorLinkman"]').val(body.find('#linkman').val());
+		   			$('[name="projectContract.distributorLinktel"]').val(body.find('#linktel').val());
+		   			layer.close(index);
+				}
+				
+				function setAreaManager(obj){
+					var _option = $(obj).find("option:selected");
+					$('[name="projectContract.areaLinkman"]').val(_option.text());
+					$('[name="projectContract.areaLinktel"]').val(_option.prop('title'));
+					setFlowProcessUser(_option.val(), _option.text());
+				}
+				$(function(){
+					var _option = $('[name="projectContract.areaLinkid"]').find("option:selected");
+					setFlowProcessUser(_option.val(), _option.text());
+				});
+				
+				</script>
+		</div>
+		
+		
+		<div th:fragment="divProjectContract" >
+			<div class="col-sm-12 search-collapse">
+				<table class="table">
+					<tr>
+						<th>项目登录号：</th>
+						<td>
+							<input type="hidden" name="projectContract.contractId" th:value="${contract.contractId}" />
+							<span th:text="${contract.contractCode}"></span>
+						</td>
+						<th>使用单位：</th>
+						<td>
+							<span th:text="${contract.useUnitName}" ></span>
+						</td>
+						<th>申报日期：</th>
+						<td>
+							<span th:text="${#dates.format(contract.applyDate, 'yyyy-MM-dd')}" ></span>
+						</td>
+					</tr>
+					<tr>
+						<th>联系人：</th>
+						<td>
+							<span th:text="${contract.useUnitLinkman}" ></span>
+						</td>
+						<th>联系电话：</th>
+						<td>
+							<span th:text="${contract.useUnitLinktel}"  ></span>
+						</td>
+						<th>项目详细地址：</th>
+						<td>
+							<span th:text="${contract.projectAddress}" ></span>
+						</td>
+					</tr>
+					<tr>
+						<th>品类：</th>
+						<td>
+							<span th:text="${@dict.getLabel('contract_brand_type',contract.brandType)}" ></span>
+						</td>
+						<th>是否总部直发：</th>
+						<td>
+							<span th:text="${@dict.getLabel('common_yes_no',contract.direct)}" ></span>
+						</td>
+						<th>是否申报调整：</th>
+						<td>
+							<span th:text="${@dict.getLabel('common_yes_no',contract.applyAdjust)}" ></span>
+						</td>
+					</tr>
+					<tr>
+						<th>是否备货工程：</th>
+						<td>
+							<span th:text="${@dict.getLabel('common_yes_no',contract.stockUp)}" ></span>
+						</td>
+						<th>备货工程申报单：</th>
+						<td colspan="3">
+							<span th:text="${contract.stockUpMemo}" ></span>
+						</td>
+					</tr>
+					<tr>
+						<th>代理商：</th>
+						<td>
+							<span th:text="${contract.agencyName}" ></span>
+						</td>
+						<th>分销商：</th>
+						<td colspan="3">
+							<span th:text="${contract.distributorName}" ></span>
+						</td>
+					</tr>
+					<tr>
+						<th>项目类型：</th>
+						<td>
+							<span th:text="${@dict.getLabel('contract_project_type',contract.projectType)}" ></span>
+						</td>
+						<th>买断类型：</th>
+						<td>
+							<span th:text="${@dict.getLabel('contract_byout_type',contract.byoutType)}" ></span>
+						</td>
+						<th>联系人：</th>
+						<td>
+							<span th:text="${contract.distributorLinkman}" ></span>
+						</td>
+					</tr>
+					<tr>
+						<th>联系电话：</th>
+						<td>
+							<span th:text="${contract.distributorLinktel}" ></span>
+						</td>
+						<th>特殊技术要求：</th>
+						<td>
+							<span th:text="${contract.specialReq}" ></span>
+						</td>
+						<th>区域经理：</th>
+						<td>
+							<span th:text="${contract.areaLinkman}" ></span>
+						</td>
+					</tr>
+					<tr>
+						<th>区域经理电话：</th>
+						<td>
+							<span th:text="${contract.areaLinktel}" ></span>
+						</td>
+						<th>CIMS申报号：</th>
+						<td colspan="3">
+							<span th:text="${contract.commonNo}"  ></span>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+		</div>
+		
+		
+		<div th:fragment="divContractProductEdit" >
+			<div class="col-sm-12 select-table">
+			    <div class="bootstrap-table">
+			    	<div class="fixed-table-toolbar">
+			    		<div class="bs-bars pull-left">
+			    			<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+								<a class="btn btn-success" onclick="addRow()">
+					                <i class="fa fa-plus"></i> 新增
+					            </a>
+								<a class="btn btn-danger btn-del disabled" onclick="removeAllRow()">
+						            <i class="fa fa-remove"></i> 删除
+						        </a>
+	        				</div>
+	        			</div>
+	        		</div>
+		        	<div class="fixed-table-container" style="padding-bottom: 0px;">
+			        	<div class="fixed-table-body">
+			        		<table id="normal-table" data-mobile-responsive="true" class="table table-hover">
+							    <thead>
+							    	<tr>
+							    		<th class="bs-checkbox " style="width: 36px; " data-field="0" tabindex="0">
+							    			<div class="th-inner "><input id="btSelectAll" type="checkbox" onclick="checkedAll(this)"></div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="width: 100px; ">
+							    			<div class="th-inner ">商品编码</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="width: 300px; ">
+							    			<div class="th-inner ">商品名称</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 80px; ">
+							    			<div class="th-inner ">申请数量</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">合同价</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">代理商申请价</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">代理商审批价格</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">分销商工程提货价</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">提货金额</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">结算类型</div><div class="fht-cell"></div>
+							    		</th>
+						    		</tr>
+						    	</thead>
+						    	<tbody  th:each="contractProduct,stat:${contractProductList}">
+						    		<tr th:id="'tr'+${stat.index}">
+										<td><input name="checkbox" type="checkbox" th:value="${stat.index}" onclick="changeCheckbox()"></td>
+										<td><input type="text" style="width: 100px" class="form-control" th:name="'contractProductList['+${stat.index}+'].productId'" th:value="${contractProduct.productId}" th:onclick="'selectProduct('+${stat.index}+')'"></td>
+										<td><input type="text" style="width: 300px" class="form-control" th:name="'contractProductList['+${stat.index}+'].productName'" th:value="${contractProduct.productName}"></td>
+										<td><input type="text" style="width: 80px" class="form-control" th:name="'contractProductList['+${stat.index}+'].applyQuantity'" th:value="${contractProduct.applyQuantity}" th:onkeyup="'funsubtotal('+${stat.index}+')'"></td>
+										<td><input type="text" style="width: 100px" class="form-control" th:name="'contractProductList['+${stat.index}+'].contractPrice'" th:value="${contractProduct.contractPrice}"></td>
+										<td><input type="text" style="width: 100px" class="form-control" th:name="'contractProductList['+${stat.index}+'].agencyApplyPrice'" th:value="${contractProduct.agencyApplyPrice}"></td>
+										<td><input type="text" style="width: 100px" class="form-control" th:name="'contractProductList['+${stat.index}+'].agencyApprovePrice'" th:value="${contractProduct.agencyApprovePrice}"></td>
+										<td><input type="text" style="width: 100px" class="form-control" th:name="'contractProductList['+${stat.index}+'].distributorPrice'" th:value="${contractProduct.distributorPrice}" th:onkeyup="'funsubtotal('+${stat.index}+')'"></td>
+										<td><input type="text" style="width: 100px" class="form-control" name="subtotal" readonly="readonly" th:value="${contractProduct.applyQuantity*contractProduct.distributorPrice}"></td>
+										<td>
+											<select style="width: 150px" class="form-control" th:name="'contractProductList['+${stat.index}+'].balanceType'" th:with="type=${@oaCommon.getSingleMap('balancetype','id','fullname')}">
+												<option th:each="dict : ${type}" th:text="${dict.value}" th:value="${dict.key}" th:selected="${dict.key == contractProduct.balanceType}"></option>
+											</select>
+										</td>
+										<td><a class="btn btn-danger btn-xs" href="javascript:void(0);" th:onclick="'removeRow('+${stat.index}+')'"><i class="fa fa-remove"></i>删除</a></td>
+<!-- 						    			<td> -->
+<!-- 											<span th:text="${@dict.getLabel('contract_balance_type',contractProduct.balanceType)}" ></span> -->
+<!-- 						    			</td> -->
+						    		</tr>
+						    	
+						    	</tbody>
+						    </table>
+					    </div>
+			    	</div>
+			    </div>
+			    <div class="clearfix"></div>
+			</div>
+			<script type="text/javascript">
+
+
+			
+			var $table = $('#normal-table');
+			var _row_index = [[${#lists.size(contractProductList)}]];
+			String.prototype.replaceAll = function(s1,s2){ 
+				return this.replace(new RegExp(s1,"gm"),s2); 
+			};
+			function checkedAll(obj){
+				$table.find('[name=checkbox]').prop('checked', $(obj).prop('checked'));
+				
+				$('.btn-del').removeClass('disabled');
+				if(!$(obj).prop('checked')){
+					$('.btn-del').addClass('disabled');
+				}
+			}
+			
+			function changeCheckbox(){
+				var chceckedLength = $table.find('[name=checkbox]:checked').length;
+				if(chceckedLength<1){
+					$('#btSelectAll').prop('checked', false);
+					$('.btn-del').addClass('disabled');
+				}else{
+					$('.btn-del').removeClass('disabled');
+				}
+			}
+			
+			function addRow(){
+				var _html = $('#trTemplate').html();
+				_html = _html.replaceAll('_row_index',_row_index);
+				$table.find('tbody').append(_html);
+			    // 增加验证
+			    var _tr = $('#tr'+_row_index+'');
+				_tr.find('[name="contractProductList['+_row_index+'].productId"]').rules("add", {required: true, messages: {required: "请选择商品！"} });
+				_tr.find('[name="contractProductList['+_row_index+'].applyQuantity"]').rules("add", {required: true,number: true, messages: {required: "请填写申请数量！"} });
+				_tr.find('[name="contractProductList['+_row_index+'].contractPrice"]').rules("add", {number: true, messages: {number: "格式不正确！"} });
+				_tr.find('[name="contractProductList['+_row_index+'].agencyApplyPrice"]').rules("add", {number: true, messages: {number: "格式不正确！"} });
+				_tr.find('[name="contractProductList['+_row_index+'].agencyApprovePrice"]').rules("add", {number: true, messages: {number: "格式不正确！"} });
+				_tr.find('[name="contractProductList['+_row_index+'].distributorPrice"]').rules("add", {required: true,number: true, messages: {required: "请填写分销商价格！"} });
+				
+				++_row_index;
+			}
+			
+			function removeRow(rowIndex){
+				var count = $table.find('tbody>tr').length;
+			    if (count == 1) {
+			    	$.modal.msg("已经是最后一条，不能删除!");
+			        return;
+			    }
+			    $('#tr'+rowIndex+'').remove();
+			}
+			
+			function removeAllRow(){
+				$('[name=checkbox]:checked').each(function(){
+					$("#tr"+$(this).val()).remove();
+				});
+				$('#btSelectAll').prop('checked', false);
+				$('.btn-del').addClass('disabled');
+				var count = $table.find('tbody>tr').length;
+				if(count<1)
+			    	addRow();
+			}
+
+			
+			
+			var _cur_product_index = -1;
+			function selectProduct(rowIndex){	
+				_cur_product_index = rowIndex;
+	    		var url = ctx + "oa/product/selectProductTree";
+	    		var options = {
+	   				title: '商品选择',
+	   				width: "480",
+	   				url: url,
+	   				callBack: setProduct
+	   			};
+	   			$.modal.openOptions(options);
+			}
+			
+			function setProduct(index, layero){
+				var body = layer.getChildFrame('body', index);
+				var _tr = $('#tr'+_cur_product_index);
+				_tr.find('[name$=productId]').val(body.find('#treeId').val());
+				_tr.find('[name$=productName]').val(body.find('#treeName').val());
+	   			layer.close(index);
+			}
+			
+			function funsubtotal(rowIndex){
+				var _tr = $('#tr'+rowIndex);
+				var applyQuantity = _tr.find('[name="contractProductList['+rowIndex+'].applyQuantity"]').val();
+				var distributorPrice = _tr.find('[name="contractProductList['+rowIndex+'].distributorPrice"]').val();
+				_tr.find('[name="subtotal"]').val(accMul(applyQuantity,distributorPrice));
+			}
+			
+			</script>
+		</div>
+		
+		<div th:fragment="divContractProductTemplate" >
+			<table style="display:none">
+				<tbody id="trTemplate">
+					<tr id="tr_row_index">  
+						<td><input name="checkbox" type="checkbox" value="_row_index" onclick="changeCheckbox()"></td>
+						<td><input type="text" style="width: 100px" class="form-control" name="contractProductList[_row_index].productId" onclick="selectProduct(_row_index)"></td>
+						<td><input type="text" style="width: 300px" class="form-control" name="contractProductList[_row_index].productName"></td>
+						<td><input type="text" style="width: 80px" class="form-control" name="contractProductList[_row_index].applyQuantity" onkeyup="funsubtotal(_row_index)"></td>
+						<td><input type="text" style="width: 100px" class="form-control" name="contractProductList[_row_index].contractPrice"></td>
+						<td><input type="text" style="width: 100px" class="form-control" name="contractProductList[_row_index].agencyApplyPrice"></td>
+						<td><input type="text" style="width: 100px" class="form-control" name="contractProductList[_row_index].agencyApprovePrice"></td>
+						<td><input type="text" style="width: 100px" class="form-control" name="contractProductList[_row_index].distributorPrice" onkeyup="funsubtotal(_row_index)"></td>
+						<td><input type="text" style="width: 100px" class="form-control" name="subtotal" readonly="readonly"></td>
+						<td>
+							<select style="width: 150px" class="form-control" name="contractProductList[_row_index].balanceType" th:with="type=${@oaCommon.getSingleMap('balancetype','id','fullname')}">
+								<option th:each="dict : ${type}" th:text="${dict.value}" th:value="${dict.key}"></option>
+							</select>
+						</td>
+						<td><a class="btn btn-danger btn-xs" href="#" onclick="removeRow(_row_index)"><i class="fa fa-remove"></i>删除</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+			
+		<div th:fragment="divContractProduct" >
+			<div class="col-sm-12 select-table">
+			    <div class="bootstrap-table">
+		        	<div class="fixed-table-container" style="padding-bottom: 0px;">
+			        	<div class="fixed-table-body">
+			        		<table id="normal-table" data-mobile-responsive="true" class="table table-hover">
+							    <thead>
+							    	<tr>
+							    		<th style="width: 100px; ">
+							    			<div class="th-inner ">商品编码</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="width: 300px; ">
+							    			<div class="th-inner ">商品名称</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 80px; ">
+							    			<div class="th-inner ">申请数量</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">合同价</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">代理商申请价</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">代理商审批价格</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">分销商工程提货价</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">提货金额</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 100px; ">
+							    			<div class="th-inner ">结算类型</div><div class="fht-cell"></div>
+							    		</th>
+						    		</tr>
+						    	</thead>
+						    	<tbody  th:each="contractProduct:${contractProductList}">
+						    		<tr>
+						    			<td>
+											<span th:text="${contractProduct.productId}" ></span>
+						    			</td>
+						    			<td style="white-space: nowrap;">
+											<span th:text="${contractProduct.productName}" ></span>
+						    			</td>
+						    			<td>
+											<span th:text="${contractProduct.applyQuantity}" ></span>
+						    			</td>
+						    			<td>
+											<span th:text="${contractProduct.contractPrice}" ></span>
+						    			</td>
+						    			<td>
+											<span th:text="${contractProduct.agencyApplyPrice}" ></span>
+						    			</td>
+						    			<td>
+											<span th:text="${contractProduct.agencyApprovePrice}" ></span>
+						    			</td>
+						    			<td>
+											<span th:text="${contractProduct.distributorPrice}" ></span>
+						    			</td>
+						    			<td>
+											<span th:text="${contractProduct.distributorPrice * contractProduct.applyQuantity}" ></span>
+						    			</td>
+						    			<td>
+											<span th:text="${@oaCommon.getSingleLabel('balancetype','id','fullname',contractProduct.balanceType)}" ></span>
+						    			</td>
+						    		</tr>
+						    	
+						    	</tbody>
+						    </table>
+					    </div>
+			    	</div>
+			    </div>
+			    <div class="clearfix"></div>
+			</div>
+		</div>
+
+		<div th:fragment="divContractFileEdit" >
+				<div class="col-sm-12 search-collapse form-group">
+					<div>
+						<label class="col-sm-2 control-label">附件：</label>
+						<div class="col-sm-9">
+							<div class="input-group">
+								<input type="file" name="contractfile" class="form-control">
+								<span class="input-group-btn">
+									<button class="btn  btn-success" type="button" onclick="addFile(this)"><i class="fa fa-plus"></i>新增</button>
+								</span>
+							</div>
+							<th:block  th:each="contractFile:${contractFileList}">
+							<div class="input-group" style='padding-top: 6px;'>
+								<span th:text="${contractFile.originalFileName}" class="form-control"></span>
+								<span class="input-group-btn">
+									<button class="btn  btn-success" type="button" th:onclick='downloadContractFile([[${contractFile.id}]])'><i class="fa fa-download"></i>下载</button>
+								</span>
+							</div>
+							</th:block>
+							<div style="display:none" id="fileTemplate">
+								<input type="file" name="contractfile" class="form-control">
+								<span class="input-group-btn">
+									<button class="btn btn-danger" type="button" onclick="removeFile(this)"><i class="fa fa-remove"></i>删除</button>
+								</span>
+							</div>
+						</div>
+					</div>
+<!-- 					<div> -->
+<!-- 						<label class="col-sm-2 control-label"><br/>抄送：</label> -->
+<!-- 						<div class="col-sm-9"> -->
+<!-- 						<br/> -->
+<!-- 							<input type="hidden" name="informUserList" id="informUserList" /> -->
+<!-- 							<input type="text" name="informUserNameList" id="informUserNameList" class="form-control" onclick="selectUser()" />  -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+				</div>
+				
+				<script type="text/javascript">
+
+				
+				function addFile(obj){
+					$(obj).parent().parent().parent().append("<div class='input-group' style='padding-top: 6px;'>"+$('#fileTemplate').html()+"</div>");
+				}
+				
+				function removeFile(obj){
+					$(obj).parent().parent().remove();
+				}
+				
+// 				function selectUser(){	
+// 		    		var url = ctx + "system/user/selectUser";
+// 		    		var options = {
+// 		   				title: '人员选择',
+// 		   				width: "680",
+// 		   				url: url,
+// 		   				callBack: function(index, layero){
+// 		   					var body = layer.getChildFrame('body', index);
+// 		   					var iframeWin = window[layero.find('iframe')[0]['name']];
+// 		   					var rows = iframeWin.getSelections();
+// 		   					if(rows.length<1){
+// 		   						return;
+// 		   					}
+// 		   					var informUserList = [];
+// 		   					var informUserNameList = [];
+// 		   					$.each(rows, function(i,d){
+// 		   						informUserList.push(d.userId+'-'+d.userName);
+// 		   						informUserNameList.push(d.userName);
+// 		   					});
+// 		   					$("#informUserList").val(informUserList);
+// 		   					$("#informUserNameList").val(informUserNameList);
+// 		   		   			layer.close(index);
+// 		   				}
+// 		   			};
+// 		   			$.modal.openOptions(options);
+					
+// 				}
+				</script>
+		</div>
+		<div th:fragment="divContractFile" >
+				<div class="col-sm-12 search-collapse">
+					<div>
+						<label class="col-sm-2 control-label">附件：</label>
+						<div class="col-sm-9">
+							<th:block  th:each="contractFile:${contractFileList}">
+							<div class="input-group" style='padding-top: 6px;'>
+								<span th:text="${contractFile.originalFileName}" class="form-control"></span>
+								<span class="input-group-btn">
+									<button class="btn  btn-success" type="button" th:onclick='downloadContractFile([[${contractFile.id}]])'><i class="fa fa-download"></i>下载</button>
+								</span>
+							</div>
+							</th:block>
+						</div>
+					</div>
+				</div>
+				<script type="text/javascript">
+					function downloadContractFile(id){
+						$.modal.msg(id);
+						location.href = ctx + "oa/contract/downloadContractFile/"+id;
+					}
+				</script>
+		</div>
+		
+		
+		<div th:fragment="divFlowProcess" >
+		
+			<div class="col-sm-12 select-table">
+			    <div class="bootstrap-table">
+		        	<div class="fixed-table-container" style="padding-bottom: 0px;">
+			        	<div class="fixed-table-body">
+			        		<table id="normal-table" data-mobile-responsive="true" class="table table-hover">
+							    <thead>
+							    	<tr>
+							    		<th style="width: 30px; ">
+							    			<div class="th-inner ">序号</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="width: 100px; ">
+							    			<div class="th-inner ">环节名称</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 80px; ">
+							    			<div class="th-inner ">操作人</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; width: 150px; ">
+							    			<div class="th-inner ">操作时间</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="text-align: left; ">
+							    			<div class="th-inner ">操作意见</div><div class="fht-cell"></div>
+							    		</th>
+							    		<th style="width: 100px; ">
+							    			<div class="th-inner ">状态</div><div class="fht-cell"></div>
+							    		</th>
+						    		</tr>
+						    	</thead>
+						    	<tbody th:each="flowProcess,iterStat:${flowProcessList}">
+						    		<tr>
+						    			<td style="text-align:center">
+											<span th:text="${iterStat.count}"></span>
+						    			</td>
+						    			<td>
+<!-- 						    				<span th:if="${flowProcess.status}=='0'" id="flowActivty" th:text="${flowProcess.activity}"> -->
+<!-- 						    				</span> -->
+					    					<th:block th:if="${flowProcess.status}=='0'" th:with="currentActivity=${flowProcess.activity}">
+											<script th:inline="javascript">
+											function getApproveUserList(){
+												var datas = [[${@oaCommon.getUserListByActivity(currentActivity)}]];
+												return datas;
+											}
+											
+											function getApproveOpinionList(){
+												var datas = [[${@oaCommon.getOpinionListByActivity(currentActivity)}]];
+												return datas;
+											}
+											
+											</script>		
+					    					</th:block>
+											<span th:text="${@dict.getLabel('contract_flow_activity',flowProcess.activity)}"></span>
+						    			</td>
+						    			<td>
+											<span th:text="${flowProcess.userName}"></span>
+						    			</td>
+						    			<td>
+											<span th:text="${#dates.format(flowProcess.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+						    			</td>
+						    			<td>
+											<span th:text="${flowProcess.opinion}"></span>
+						    			</td>
+						    			<td>
+											<span th:text="${@dict.getLabel('contract_flow_status',flowProcess.status)}"></span>
+						    			</td>
+						    		</tr>
+						    	
+						    	</tbody>
+						    </table>
+					    </div>
+			    	</div>
+			    </div>
+			    <div class="clearfix"></div>
+			</div>
+		</div>

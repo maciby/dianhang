@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dianhang.oa.mapper.ContractMapper">
+    
+    <resultMap type="Contract" id="ContractResult">
+        <id     property="contractId"        column="CONTRACT_ID"        />
+        <result property="contractCode"      column="CONTRACT_CODE"      />
+        <result property="contractType"      column="CONTRACT_Type"      />
+        <result property="distributorId"     column="DISTRIBUTOR_ID"     />
+        <result property="distributorName"   column="DISTRIBUTOR_NAME"   />
+        <result property="createBy"          column="CREATE_BY"          />
+        <result property="createTime"        column="CREATE_TIME"        />
+        <result property="status"            column="STATUS"        />
+    </resultMap>
+    
+	<sql id="selectContractVo">
+<!--         SELECT CONTRACT_ID, CONTRACT_CODE,'1' AS CONTRACT_TYPE, DISTRIBUTOR_ID, DISTRIBUTOR_NAME, CREATE_BY, CREATE_TIME, STATUS -->
+<!--         FROM GZ_PROJECT_CONTRACT pc -->
+		SELECT CONTRACT_ID,CONTRACT_CODE,CONTRACT_TYPE,DISTRIBUTOR_ID,DISTRIBUTOR_NAME,CREATE_BY,CREATE_TIME,STATUS
+		FROM (
+			SELECT CONTRACT_ID, CONTRACT_CODE,'1' AS CONTRACT_TYPE, DISTRIBUTOR_ID, DISTRIBUTOR_NAME, CREATE_BY, CREATE_TIME, STATUS
+        	FROM GZ_PROJECT_CONTRACT
+			UNION ALL
+			SELECT CONTRACT_ID,CONTRACT_CODE,'2' CONTRACT_TYPE,'' DISTRIBUTOR_ID,'' DISTRIBUTOR_NAME,'' CREATE_BY,'' CREATE_TIME, ''STATUS
+    		FROM GZ_SPECIAL_CONTRACT
+		) PC
+    </sql>
+	
+    <select id="selectContractList" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+    </select>
+    
+    <select id="selectContractListByUser" parameterType="Contract" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        where exists(select 1 from GZ_FLOW_PROCESS fp where fp.inst_uuid = pc.contract_id and fp.user_id=#{relationUserId}
+            <if test="status != null  and status != '' "> and status = #{status}</if>
+        )
+    </select>
+    
+</mapper>

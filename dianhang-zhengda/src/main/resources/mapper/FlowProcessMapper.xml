@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dianhang.oa.mapper.FlowProcessMapper">
+    
+    <resultMap type="FlowProcess" id="FlowProcessResult">
+        <result property="uuid"           column="UUID"    />
+        <result property="instUuid"       column="INST_UUID"    />
+        <result property="activity"       column="ACTIVITY"    />
+        <result property="userId"         column="USER_ID"    />
+        <result property="userName"       column="USER_NAME"    />
+        <result property="deptId"         column="DEPT_ID"    />
+        <result property="deptName"       column="DEPT_NAME"    />
+        <result property="createBy"       column="CREATE_BY"    />
+        <result property="createTime"     column="CREATE_TIME"    />
+        <result property="opinion"        column="OPINION"    />
+        <result property="status"         column="STATUS"    />
+        <result property="updateTime"       column="UPDATE_TIME"    />
+    </resultMap>
+    
+	<sql id="selectFlowProcessVo">
+        SELECT [UUID], [INST_UUID], [ACTIVITY], [USER_ID], [USER_NAME], [DEPT_ID], [DEPT_NAME], [CREATE_BY], [CREATE_TIME], [OPINION], [STATUS], [UPDATE_TIME] 
+		FROM [GZ_FLOW_PROCESS]
+    </sql>
+	
+    <select id="selectFlowProcessByInstUuid" parameterType="String" resultMap="FlowProcessResult">
+        <include refid="selectFlowProcessVo"/>
+        where INST_UUID = #{id} order by CREATE_TIME,ACTIVITY
+    </select>
+	
+    <select id="selectCurrentFlowProcessByInstUuid" resultMap="FlowProcessResult" statementType="PREPARED">
+        <include refid="selectFlowProcessVo"/>
+        where INST_UUID = '${arg0}' and USER_ID = '${arg1}' and STATUS='0'
+    </select>
+	
+    <select id="selectBackFlowProcess" resultMap="FlowProcessResult" statementType="PREPARED">
+        SELECT TOP 1 [UUID], [INST_UUID], [ACTIVITY], [USER_ID], [USER_NAME], [DEPT_ID], [DEPT_NAME], [CREATE_BY], [CREATE_TIME], [OPINION], [STATUS], [UPDATE_TIME] 
+		FROM [GZ_FLOW_PROCESS]
+        where INST_UUID = '${arg0}' and ACTIVITY = '${arg1}' and STATUS='2' ORDER BY CREATE_TIME DESC
+    </select>
+            
+    <insert id="insertFlowProcess" parameterType="FlowProcess">
+        insert into GZ_FLOW_PROCESS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			UUID,
+			<if test="instUuid != null  and instUuid != ''  ">INST_UUID,</if>
+			<if test="activity != null  and activity != ''  ">ACTIVITY,</if>
+			<if test="userId != null  and userId != ''  ">USER_ID,</if>
+			<if test="userName != null  ">USER_NAME,</if>
+			<if test="deptId != null  ">DEPT_ID,</if>
+			<if test="deptName != null  ">DEPT_NAME,</if>
+			<if test="createBy != null  ">CREATE_BY,</if>
+			<if test="opinion != null  ">OPINION,</if>
+			<if test="status != null  ">STATUS,</if>
+			<if test="updateTime != null  ">UPDATE_TIME,</if>
+			CREATE_TIME
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			replace(newId(),'-',''),
+			<if test="instUuid != null  and instUuid != ''  ">#{instUuid},</if>
+			<if test="activity != null  and activity != ''  ">#{activity},</if>
+			<if test="userId != null  and userId != ''  ">#{userId},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="deptId != null  ">#{deptId},</if>
+			<if test="deptName != null  ">#{deptName},</if>
+			<if test="createBy != null  ">#{createBy},</if>
+			<if test="opinion != null  ">#{opinion},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			getdate()
+         </trim>
+    </insert>
+    
+    <update id="updateFlowProcess" parameterType="FlowProcess">
+        update GZ_FLOW_PROCESS
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null  and deptId != ''  ">DEPT_ID = #{deptId},</if>
+            <if test="deptName != null  and deptName != ''  ">DEPT_NAME = #{deptName},</if>
+            <if test="opinion != null  and opinion != ''  ">OPINION = #{opinion},</if>
+            <if test="status != null  and status != ''  ">STATUS = #{status},</if>
+            <if test="updateTime != null  ">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where UUID = #{uuid}
+    </update>
+    
+    
+</mapper>
